@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 [RequireComponent(typeof(CharacterController))]
-public class FPSCharacterController : MonoBehaviour
+public class MyCharacterController : MonoBehaviour
 {
     private CharacterController characterController;
 
