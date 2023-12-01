@@ -1,5 +1,7 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 
 [RequireComponent(typeof(CharacterController))]
@@ -9,7 +11,8 @@ public class MyCharacterController : MonoBehaviour
 
     [SerializeField] private float playerSpeed = 5;
     [SerializeField] private float jumpPower = 5;
-    private float gravity = -9.81f;
+    [SerializeField] private float pushPower = 2f;
+    private readonly float gravity = -9.81f;
 
     private float yDirection = 0;
     // Start is called before the first frame update
@@ -47,4 +50,21 @@ public class MyCharacterController : MonoBehaviour
         characterController.Move(velocity * Time.deltaTime);
         //characterController.SimpleMove(direction * playerSpeed);
     }
+
+    private void OnControllerColliderHit(ControllerColliderHit hit)
+    {
+        if (hit.transform.CompareTag("MoveObject"))
+        {
+            Rigidbody rigidbody = hit.collider.attachedRigidbody;
+
+            if (rigidbody == null || rigidbody.isKinematic)
+            {
+                return;
+            }
+            
+            Vector3 pushDirection = new Vector3(hit.moveDirection.x, 0, hit.moveDirection.z);
+            rigidbody.velocity = pushDirection * pushPower;
+        }
+    }
 }
+
