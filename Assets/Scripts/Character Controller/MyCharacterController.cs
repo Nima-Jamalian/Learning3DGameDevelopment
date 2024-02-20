@@ -34,14 +34,14 @@ public class MyCharacterController : MonoBehaviour
         {
             //Rest yDirection
             yDirection = -0.5f;
-            
+
             //Jump
             if (Input.GetKeyDown(KeyCode.Space))
             {
                 yDirection = jumpPower;
-            }  
+            }
         }
-  
+
         //Velocity
         Vector3 velocity = direction * playerSpeed;
         velocity.y = yDirection;
@@ -61,7 +61,6 @@ public class MyCharacterController : MonoBehaviour
             {
                 return;
             }
-            
             Vector3 pushDirection = new Vector3(hit.moveDirection.x, 0, hit.moveDirection.z);
             rigidbody.velocity = pushDirection * pushPower;
         }

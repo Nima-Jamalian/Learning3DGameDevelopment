@@ -7,6 +7,10 @@ namespace characterControllerSystems
     public class MoveToward : MonoBehaviour
     {
         [SerializeField] private float speed = 5f;
+        private bool canMove = false;
+        private Vector3 targetPosition;
+        [SerializeField] private GameObject posSelectReticle;
+        private bool showPoseSelectReticle = false;
         private Camera camera;
         // Start is called before the first frame update
         void Start()
@@ -27,11 +31,45 @@ namespace characterControllerSystems
                 {
                     if (hitInfo.transform.CompareTag("Ground"))
                     {
-                        transform.position = Vector3.MoveTowards(transform.position, new Vector3(hitInfo.point.x,transform.position.y,hitInfo.point.z), speed * Time.deltaTime);
-                        transform.LookAt(new Vector3(hitInfo.point.x,transform.position.y,hitInfo.point.z));
+                        canMove = true;
+                        targetPosition = new Vector3(hitInfo.point.x, transform.position.y, hitInfo.point.z);
+                        Debug.Log(targetPosition);
+                        showPoseSelectReticle = true;
+                    }
+                    else
+                    {
+                        showPoseSelectReticle = false;
                     }
                 }
             }
+            
+            if (Input.GetMouseButtonDown(0) && showPoseSelectReticle == true)
+            {
+                posSelectReticle.transform.position = new Vector3(targetPosition.x,0,targetPosition.z);
+                posSelectReticle.SetActive(true);
+                StartCoroutine(hidePosSelectReticle());
+            }
+            
+            IEnumerator hidePosSelectReticle()
+            {
+                yield return new WaitForSeconds(0.1f);
+                showPoseSelectReticle = false;
+                posSelectReticle.SetActive(false);
+            }
+            
+            
+            if (Vector3.Distance(transform.position, targetPosition) == 0)
+            {
+                canMove = false;
+            }
+
+            if (canMove == true)
+            {
+                transform.position = Vector3.MoveTowards(transform.position, targetPosition , speed * Time.deltaTime);
+                transform.LookAt(targetPosition);
+            }
+
+
         }
     }
 }

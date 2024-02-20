@@ -6,6 +6,7 @@ TagManager:
   tags:
   - MoveObject
   - Ground
+  - Target
   layers:
   - Default
   - TransparentFX
